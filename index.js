@@ -2,6 +2,12 @@ const inquirer = require ('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
 
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'team'
+});
+
 // function to prompt user for what they would like to do
 const promptAction = () => {
     return inquirer.prompt([

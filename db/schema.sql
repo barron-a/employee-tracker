@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS team_db;
+CREATE DATABASE team_db;
+USE team_db;
+
 DROP TABLE IF EXISTS department;
 DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS employee;
