@@ -10,7 +10,7 @@ VALUES
     (2, 'CFO', 250000, 1),
     (3, 'Junior Designer', 75000, 2),
     (4, 'Senior Designer', 100000, 2),
-    (5, 'Engineer' 130000, 3),
+    (5, 'Engineer', 130000, 3),
     (6, 'Engineering Manager', 120000, 3);
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
@@ -19,7 +19,7 @@ VALUES
     (2, 'Maria', 'Martinez', 2, null),
     (3, 'Kara', 'Clark', 3, 5),
     (4, 'Nathan', 'Stevens', 3, 5),
-    (5, 'Tim', 'Waterloo' 4, null),
+    (5, 'Tim', 'Waterloo', 4, null),
     (6, 'Ronald', 'Jenkins', 5, 10),
     (7, 'Christine', 'Arnoldson', 5, 10),
     (8, 'MaryAnn', 'Rodriguez', 5, 10),

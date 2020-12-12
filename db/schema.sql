@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS team_db;
-CREATE DATABASE team_db;
-USE team_db;
+DROP DATABASE IF EXISTS team;
+CREATE DATABASE team;
+USE team;
 
 DROP TABLE IF EXISTS department;
 DROP TABLE IF EXISTS role;
@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS employee;
 
 CREATE TABLE department (
     id INT PRIMARY KEY,
-    name VARCHAR(30) NOT NULL,
+    name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE role (
