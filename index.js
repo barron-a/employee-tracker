@@ -5,31 +5,33 @@ const cTable = require('console.table');
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
+    password: '',
     database: 'team'
 });
 
 // function to prompt user for what they would like to do
-const promptAction = () => {
+const newAction = () => {
     return inquirer.prompt([
         {
             type: 'list',
             name: 'action',
             message: 'What would you like to do?',
             choices: [
-                'View All Departments',
-                'View All Roles',
-                'View All Employees',
-                'Add a Department',
-                'Add a Role',
-                'Add an Employee',
-                'Update an Employee Role'
+                {name: 'View All Departments', value: 'viewdepts'},
+                {name: 'View All Roles', value: 'viewroles'},
+                {name: 'View All Employees', value: 'viewemployees'},
+                {name: 'Add a Department', value: 'adddept'},
+                {name: 'Add a Role', value: 'addrole'},
+                {name: 'Add an Employee', value: 'addemployee'},
+                {name: 'Update an Employee Role', value: 'updateemployee'},
+                {name: "I'm done building my team for now", value: 'exit'}
             ]
         }
     ]);
 };
 
 // function to facilitate adding a department
-const promptDepartment = () => {
+const addDepartment = () => {
     return inquirer.prompt([
         {
             type: 'input',
@@ -48,7 +50,7 @@ const promptDepartment = () => {
 };
 
 // function to facilitate adding a role
-const promptRole = () => {
+const addRole = () => {
     return inquirer.prompt([
         {
             type: 'input',
@@ -93,7 +95,7 @@ const promptRole = () => {
 };
 
 // function to facilitate adding an employee
-const promptEmployee = () => {
+const addEmployee = () => {
     return inquirer.prompt([
         {
             type: 'input',
@@ -150,5 +152,36 @@ const promptEmployee = () => {
     ]);
 };
 
+// loop that creates new team member based on user input or exits the application if user chooses to exit
+const viewDataLoop = () => {
+    return newAction().then(({ action }) => {
+        //console.log(action)
+        if (action === 'exit') {
+            console.log('Goodbye!');
+            return;
+        }
+        if (action === 'viewdepts') {
+            console.log('Current Departments:');
+            return viewDataLoop();
+            // Likely insert cTable here
+        }
+        if (action === 'viewroles') {
+            console.log('Current Roles:');
+            return viewDataLoop();
+            // Likely insert cTable here
+        }
+        if (action === 'viewemployees') {
+            console.log('Current Employees:');
+            return viewDataLoop();
+            // Likely insert cTable here
+        }
+    })
+    // FROM OLD PROJECT push new employee to teamMembers array after creation, then go back to employeeCreationLoop
+}
 
-promptAction();
+
+// prompt for what user wants to do
+// IF they choose to view something from the database, enter a loop to figure out what to show
+// ELSE IF they choose to add or update someone, enter a loop to figure out which prompt loop to enter
+
+viewDataLoop();
