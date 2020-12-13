@@ -17,13 +17,13 @@ const newAction = () => {
             name: 'action',
             message: 'What would you like to do?',
             choices: [
-                {name: 'View All Departments', value: 'viewdepts'},
-                {name: 'View All Roles', value: 'viewroles'},
-                {name: 'View All Employees', value: 'viewemployees'},
-                {name: 'Add a Department', value: 'adddept'},
-                {name: 'Add a Role', value: 'addrole'},
-                {name: 'Add an Employee', value: 'addemployee'},
-                {name: 'Update an Employee Role', value: 'updateemployee'},
+                {name: 'View All Departments', value: 'viewDepts'},
+                {name: 'View All Roles', value: 'viewRoles'},
+                {name: 'View All Employees', value: 'viewEmployees'},
+                {name: 'Add a Department', value: 'addDept'},
+                {name: 'Add a Role', value: 'addRole'},
+                {name: 'Add an Employee', value: 'addEmployee'},
+                {name: 'Update an Employee Role', value: 'updateEmployee'},
                 {name: "I'm done building my team for now", value: 'exit'}
             ]
         }
@@ -137,40 +137,53 @@ const addEmployee = () => {
             }
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'manager',
-            message: "What is the employee's role?",
-            validate: empRole => {
-                if (empRole) {
-                    return true;
-                } else {
-                    console.log("Please enter the employee's role");
-                    return false;
-                }
-            }
+            message: "Who is the employee's manager?",
+            choices: [
+                // managers array
+            ]
         }
     ]);
 };
 
-// loop that creates new team member based on user input or exits the application if user chooses to exit
-const viewDataLoop = () => {
-    return newAction().then(({ action }) => {
-        //console.log(action)
-        if (action === 'exit') {
+// loop to prompt user for which CRUD method they would like to access
+const  choiceLoop = () => {
+    return newAction().then(({ choice }) => {
+        if (choice === 'viewDepts' || choice === 'viewRoles' || choice === 'viewEmployees') {
+            console.log('View Options:');
+            return viewLoop();
+        }
+        if (choice === 'addDept' || choice === 'addRole' || choice === 'addEmployee') {
+            console.log('Creation Options');
+            return creationLoop();
+        }
+        else {
             console.log('Goodbye!');
             return;
         }
-        if (action === 'viewdepts') {
+    })
+}
+
+// loop that allows user to view data about the departments, roles, or employees
+const viewLoop = () => {
+    return newAction().then(({ view }) => {
+        //console.log(action)
+        if (view === 'exit') {
+            console.log('Returning to Main Menu');
+            return choiceLoop();
+        }
+        if (view === 'viewDepts') {
             console.log('Current Departments:');
             return viewDataLoop();
             // Likely insert cTable here
         }
-        if (action === 'viewroles') {
+        if (view === 'viewRoles') {
             console.log('Current Roles:');
             return viewDataLoop();
             // Likely insert cTable here
         }
-        if (action === 'viewemployees') {
+        if (view === 'viewEmployees') {
             console.log('Current Employees:');
             return viewDataLoop();
             // Likely insert cTable here
@@ -179,9 +192,46 @@ const viewDataLoop = () => {
     // FROM OLD PROJECT push new employee to teamMembers array after creation, then go back to employeeCreationLoop
 }
 
+// loop that allows user to create new departments, roles, and employees
+const creationLoop = () => {
+    return newAction().then(({ action }) => {
+        //console.log(action);
+        if (action === 'exit') {
+            console.log('Returning to Main Menu');
+            return choiceLoop();
+        }
+        if (action === 'addDept') {
+            console.log('Adding New Department');
+            return addDepartment().then(answers => {
+                return new Department()
+            })
+        }
+        if (action === 'addRole') {
+            console.log('Adding New Role');
+            return addRole().then(answers => {
+                return new Role()
+            })
+        }
+        if (action === 'addEmployee') {
+            console.log('Adding New Employee');
+            return addEmployee().then(answers => {
+                return new Employee()
+            })
+        }
+        if (action === 'updateEmployee') {
+            console.log('Updating Employee');
+            return updateEmployee().then(answers => {
+                return new Employee()
+            })
+        }
+    })
+}
+
 
 // prompt for what user wants to do
 // IF they choose to view something from the database, enter a loop to figure out what to show
 // ELSE IF they choose to add or update someone, enter a loop to figure out which prompt loop to enter
 
-viewDataLoop();
+//viewLoop();
+//creationLoop();
+choiceLoop();
