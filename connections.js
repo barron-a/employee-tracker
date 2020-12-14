@@ -7,28 +7,54 @@ const connection = mysql.createConnection({
     database: 'team'
 });
 
-connection.connect(function(err) {
-    if (err) throw err;
-});
+// connection.connect(function(err) {
+//     if (err) throw err;
+//     console.log('Connected!');
+//     connection.query('CREATE DATABASE team', function (err , result) {
+//         if (err) throw err;
+//         console.log('Database created');
+//     });
+// });
 
-const allDepartments = connection.promise().query('SELECT * from departments')
+// connection.connect(function(err) {
+//     if (err) throw err;
+//     console.log('Connected!');
+//     var sql = 'CREATE TABLE departments (id INT PRIMARY KEY, name VARCHAR(30) NOT NULL)';
+//     connection.query(sql, function (err , result) {
+//         if (err) throw err;
+//         console.log('Table created');
+//     });
+// });
+
+const allDepartments = () => {
+    connection.promise().query('SELECT * from departments')
     .then( ([rows,fields]) => {
         console.log(rows);
-    })
-    .catch(console.log)
-
-const allRoles = connection.promise().query('SELECT * from roles')
-    .then( ([rows,fields]) => {
-        console.log(rows);
-    })
-    .catch(console.log)
-
-const allEmployees = connection.promise().query('SELECT * from employees')
-    .then( ([rows,fields]) => {
-        console.log(rows);
+        console.table[rows];
     })
     .catch(console.log)
     .then( () => connection.end());
+} 
+
+const allRoles = () => {
+    connection.promise().query('SELECT * from roles')
+    .then( ([rows,fields]) => {
+        console.log(rows);
+        console.table[rows];
+    })
+    .catch(console.log)
+    .then( () => connection.end());
+}
+
+const allEmployees = () => {
+    connection.promise().query('SELECT * from employees')
+    .then( ([rows,fields]) => {
+        console.log(rows);
+        console.table[rows];
+    })
+    .catch(console.log)
+    .then( () => connection.end());
+}
 
 module.exports = allDepartments;
 module.exports = allRoles;

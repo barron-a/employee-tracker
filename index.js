@@ -156,7 +156,6 @@ const choiceLoop = () => {
         }
         if (choice === 'viewDepts') {
             console.log('Departments:');
-            console.table(allDepartments);
             return choiceLoop();
         }
         if (choice === 'viewRoles') {
