@@ -1,10 +1,10 @@
-INSERT INTO department (id, name)
+INSERT INTO departments (id, name)
 VALUES
     (1, 'Finance'),
     (2, 'Design'),
     (3, 'Engineering');
 
-INSERT INTO role (id, title, salary, department_id)
+INSERT INTO roles (id, title, salary, department_id)
 VALUES
     (1, 'Accountant', 80000, 1),
     (2, 'CFO', 250000, 1),
@@ -13,7 +13,7 @@ VALUES
     (5, 'Engineer', 130000, 3),
     (6, 'Engineering Manager', 120000, 3);
 
-INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
+INSERT INTO employees (id, first_name, last_name, role_id, manager_id)
 VALUES
     (1, 'Jeff', 'Meyer', 1, 2),
     (2, 'Maria', 'Martinez', 2, null),

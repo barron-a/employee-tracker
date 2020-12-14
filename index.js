@@ -1,24 +1,21 @@
 const inquirer = require ('inquirer');
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2');
 const cTable = require('console.table');
 
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employee');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'team'
-});
+const allDepartments = require('./connections');
+const allRoles = require('./connections');
+const allEmployees = require('./connections');
 
 // function to prompt user for what they would like to do
 const newAction = () => {
     return inquirer.prompt([
         {
             type: 'list',
-            name: 'action',
+            name: 'choice',
             message: 'What would you like to do?',
             choices: [
                 {name: 'View All Departments', value: 'viewDepts'},
@@ -152,90 +149,46 @@ const addEmployee = () => {
 };
 
 // loop to prompt user for which CRUD method they would like to access
-const  choiceLoop = () => {
+const choiceLoop = () => {
     return newAction().then(({ choice }) => {
-        if (choice === 'viewDepts' || choice === 'viewRoles' || choice === 'viewEmployees') {
-            console.log('View Options:');
-            return viewLoop();
-        }
-        if (choice === 'addDept' || choice === 'addRole' || choice === 'addEmployee') {
-            console.log('Creation Options');
-            return creationLoop();
-        }
-        else {
-            console.log('Goodbye!');
+        if (choice === 'exit') {
             return;
         }
-    })
-}
-
-// loop that allows user to view data about the departments, roles, or employees
-const viewLoop = () => {
-    return newAction().then(({ view }) => {
-        //console.log(action)
-        if (view === 'exit') {
-            console.log('Returning to Main Menu');
+        if (choice === 'viewDepts') {
+            console.log('Departments:');
+            console.table(allDepartments);
             return choiceLoop();
         }
-        if (view === 'viewDepts') {
-            console.log('Current Departments:');
-            return viewDataLoop();
-            // Likely insert cTable here
-        }
-        if (view === 'viewRoles') {
-            console.log('Current Roles:');
-            return viewDataLoop();
-            // Likely insert cTable here
-        }
-        if (view === 'viewEmployees') {
-            console.log('Current Employees:');
-            return viewDataLoop();
-            // Likely insert cTable here
-        }
-    })
-    // FROM OLD PROJECT push new employee to teamMembers array after creation, then go back to employeeCreationLoop
-}
-
-// loop that allows user to create new departments, roles, and employees
-const creationLoop = () => {
-    return newAction().then(({ action }) => {
-        //console.log(action);
-        if (action === 'exit') {
-            console.log('Returning to Main Menu');
+        if (choice === 'viewRoles') {
+            console.log('Roles:');
             return choiceLoop();
         }
-        if (action === 'addDept') {
-            console.log('Adding New Department');
+        if (choice === 'viewEmployees') {
+            console.log('Employees:');
+            return choiceLoop();
+        }
+        if (choice === 'addDept') {
+            console.log('Adding Department');
             return addDepartment().then(answers => {
-                return new Department()
-            })
+                return new Department(answers.name)
+            });
         }
-        if (action === 'addRole') {
-            console.log('Adding New Role');
+        if (choice === 'addRole') {
+            console.log('Adding Role');
             return addRole().then(answers => {
-                return new Role()
-            })
+                return new Role(answers.name, answers.salary, answers.department)
+            });
         }
-        if (action === 'addEmployee') {
-            console.log('Adding New Employee');
+        if (choice === 'addEmployee') {
+            console.log('Adding Employee');
             return addEmployee().then(answers => {
-                return new Employee()
-            })
+                return new Employee(answers.firstName, answers.lastName, answers.role, answers.manager)
+            });
         }
-        if (action === 'updateEmployee') {
-            console.log('Updating Employee');
-            return updateEmployee().then(answers => {
-                return new Employee()
-            })
+        else {
+            console.log('Updating an Employee');
         }
     })
 }
 
-
-// prompt for what user wants to do
-// IF they choose to view something from the database, enter a loop to figure out what to show
-// ELSE IF they choose to add or update someone, enter a loop to figure out which prompt loop to enter
-
-//viewLoop();
-//creationLoop();
 choiceLoop();
