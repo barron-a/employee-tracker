@@ -2,7 +2,7 @@ const inquirer = require ('inquirer');
 const mysql = require('mysql2');
 require('console.table');
 
-const connection = require('./connections');
+const connection = require('./connection');
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employee');
