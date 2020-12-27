@@ -1,14 +1,11 @@
 const inquirer = require ('inquirer');
 const mysql = require('mysql2');
-const cTable = require('console.table');
+require('console.table');
 
+const connection = require('./connections');
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employee');
-
-const allDepartments = require('./connections');
-const allRoles = require('./connections');
-const allEmployees = require('./connections');
 
 // function to prompt user for what they would like to do
 const newAction = () => {
@@ -35,17 +32,12 @@ const newAction = () => {
 const addDepartment = () => {
     return inquirer.prompt([
         {
-            type: 'input',
+            type: 'list',
             name: 'name',
             message: 'What is the name of the department?',
-            validate: deptName => {
-                if (deptName) {
-                    return true;
-                } else {
-                    console.log("Please enter the name of the new department");
-                    return false;
-                }
-            }
+            choices: [
+
+            ]
         }
     ]);
 };
@@ -156,15 +148,15 @@ const choiceLoop = () => {
         }
         if (choice === 'viewDepts') {
             console.log('Departments:');
-            return choiceLoop();
+            return Department.getAll().then(console.table).then(choiceLoop);
         }
         if (choice === 'viewRoles') {
             console.log('Roles:');
-            return choiceLoop();
+            return Role.getAll().then(console.table).then(choiceLoop);
         }
         if (choice === 'viewEmployees') {
             console.log('Employees:');
-            return choiceLoop();
+            return Employee.getAll().then(console.table).then(choiceLoop);
         }
         if (choice === 'addDept') {
             console.log('Adding Department');
@@ -172,10 +164,16 @@ const choiceLoop = () => {
                 return new Department(answers.name)
             });
         }
+        // if (choice === 'addRole') {
+        //     console.log('Adding Role');
+        //     return addRole().then(answers => {
+        //         return new Role(answers.name, answers.salary, answers.department)
+        //     });
+        // }
         if (choice === 'addRole') {
             console.log('Adding Role');
             return addRole().then(answers => {
-                return new Role(answers.name, answers.salary, answers.department)
+                return Role.save().then(choiceLoop);
             });
         }
         if (choice === 'addEmployee') {
