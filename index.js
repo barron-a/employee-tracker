@@ -1,8 +1,9 @@
-const inquirer = require ('inquirer');
+const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const db = require('./db/connection');
 require('console.table');
 
-const connection = require('./connection');
+const connection = require('./db/connection');
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employee');
@@ -15,39 +16,36 @@ const newAction = () => {
             name: 'choice',
             message: 'What would you like to do?',
             choices: [
-                {name: 'View All Departments', value: 'viewDepts'},
-                {name: 'View All Roles', value: 'viewRoles'},
-                {name: 'View All Employees', value: 'viewEmployees'},
-                {name: 'Add a Department', value: 'addDept'},
-                {name: 'Add a Role', value: 'addRole'},
-                {name: 'Add an Employee', value: 'addEmployee'},
-                {name: 'Update an Employee Role', value: 'updateEmployee'},
-                {name: "I'm done building my team for now", value: 'exit'}
+                { name: 'View All Departments', value: 'viewDepts' },
+                { name: 'View All Roles', value: 'viewRoles' },
+                { name: 'View All Employees', value: 'viewEmployees' },
+                { name: 'Add a Department', value: 'addDept' },
+                { name: 'Add a Role', value: 'addRole' },
+                { name: 'Add an Employee', value: 'addEmployee' },
+                { name: 'Update an Employee Role', value: 'updateEmployee' },
+                { name: "I'm done building my team for now", value: 'exit' }
             ]
         }
     ]);
 };
 
 // function to facilitate adding a department
-const addDepartment = () => {
+const promptDepartment = () => {
     return inquirer.prompt([
         {
-            type: 'list',
+            type: 'input',
             name: 'name',
             message: 'What is the name of the department?',
-            choices: [
-
-            ]
         }
     ]);
 };
 
 // function to facilitate adding a role
-const addRole = () => {
+const promptRole = () => {
     return inquirer.prompt([
         {
             type: 'input',
-            name: 'name',
+            name: 'title',
             message: 'What is the name of the new role?',
             validate: roleName => {
                 if (roleName) {
@@ -73,7 +71,7 @@ const addRole = () => {
         },
         {
             type: 'input',
-            name: 'department',
+            name: 'departmentId',
             message: 'Which department does this role belong to?',
             validate: roleDept => {
                 if (roleDept) {
@@ -88,7 +86,7 @@ const addRole = () => {
 };
 
 // function to facilitate adding an employee
-const addEmployee = () => {
+const promptEmployee = () => {
     return inquirer.prompt([
         {
             type: 'input',
@@ -142,7 +140,7 @@ const addEmployee = () => {
 
 // loop to prompt user for which CRUD method they would like to access
 const choiceLoop = () => {
-    return newAction().then(({ choice }) => {
+    return newAction().then(async ({ choice }) => {
         if (choice === 'exit') {
             return;
         }
@@ -160,21 +158,17 @@ const choiceLoop = () => {
         }
         if (choice === 'addDept') {
             console.log('Adding Department');
-            return addDepartment().then(answers => {
-                return new Department(answers.name)
-            });
+            const answers = await promptDepartment()
+            await Department.addNew(answers)
+            console.log(`New department "${answers.name}" has been added to the database`)
+            return choiceLoop()
         }
-        // if (choice === 'addRole') {
-        //     console.log('Adding Role');
-        //     return addRole().then(answers => {
-        //         return new Role(answers.name, answers.salary, answers.department)
-        //     });
-        // }
         if (choice === 'addRole') {
             console.log('Adding Role');
-            return addRole().then(answers => {
-                return Role.save().then(choiceLoop);
-            });
+            return promptRole()
+                .then(answers => Role.addNew(answers))
+                .then(() => console.log(`New role "${answers.title}" has been added to the database`))
+                .then(choiceLoop);
         }
         if (choice === 'addEmployee') {
             console.log('Adding Employee');

@@ -15,13 +15,13 @@ VALUES
 
 INSERT INTO employees (id, first_name, last_name, role_id, manager_id)
 VALUES
-    (1, 'Jeff', 'Meyer', 1, 2),
+    (1, 'Jeff', 'Meyer', 1, null),
     (2, 'Maria', 'Martinez', 2, null),
-    (3, 'Kara', 'Clark', 3, 5),
-    (4, 'Nathan', 'Stevens', 3, 5),
+    (3, 'Kara', 'Clark', 3, 1),
+    (4, 'Nathan', 'Stevens', 3, 1),
     (5, 'Tim', 'Waterloo', 4, null),
-    (6, 'Ronald', 'Jenkins', 5, 10),
-    (7, 'Christine', 'Arnoldson', 5, 10),
-    (8, 'MaryAnn', 'Rodriguez', 5, 10),
-    (9, 'Hermione', 'Welch', 5, 10),
+    (6, 'Ronald', 'Jenkins', 5, 2),
+    (7, 'Christine', 'Arnoldson', 5, 2),
+    (8, 'MaryAnn', 'Rodriguez', 5, 2),
+    (9, 'Hermione', 'Welch', 5, 2),
     (10, 'Zoe', 'Smithsonian', 5, null);
