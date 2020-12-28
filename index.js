@@ -7,6 +7,7 @@ const connection = require('./db/connection');
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employee');
+const Choices = require('inquirer/lib/objects/choices');
 
 // function to prompt user for what they would like to do
 const newAction = () => {
@@ -22,7 +23,7 @@ const newAction = () => {
                 { name: 'Add a Department', value: 'addDept' },
                 { name: 'Add a Role', value: 'addRole' },
                 { name: 'Add an Employee', value: 'addEmployee' },
-                { name: 'Update an Employee Role', value: 'updateEmployee' },
+                { name: 'Update an Employee Role', value: 'updateEmployeeRole' },
                 { name: "I'm done building my team for now", value: 'exit' }
             ]
         }
@@ -70,17 +71,10 @@ const promptRole = () => {
             }
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'departmentId',
             message: 'Which department does this role belong to?',
-            validate: roleDept => {
-                if (roleDept) {
-                    return true;
-                } else {
-                    console.log("Please enter the department this role belongs in");
-                    return false;
-                }
-            }
+            choices: departments
         }
     ]);
 };
@@ -128,12 +122,12 @@ const promptEmployee = () => {
             }
         },
         {
-            type: 'list',
+            type: 'input',
             name: 'manager',
             message: "Who is the employee's manager?",
-            choices: [
-                // managers array
-            ]
+            // choices: [
+            //     managers array
+            // ]
         }
     ]);
 };
@@ -157,24 +151,25 @@ const choiceLoop = () => {
             return Employee.getAll().then(console.table).then(choiceLoop);
         }
         if (choice === 'addDept') {
-            console.log('Adding Department');
-            const answers = await promptDepartment()
+            console.log('===== Adding Department =====');
+            const answers = await promptDepartment();
             await Department.addNew(answers)
             console.log(`New department "${answers.name}" has been added to the database`)
-            return choiceLoop()
+            return choiceLoop();
         }
         if (choice === 'addRole') {
-            console.log('Adding Role');
-            return promptRole()
-                .then(answers => Role.addNew(answers))
-                .then(() => console.log(`New role "${answers.title}" has been added to the database`))
-                .then(choiceLoop);
+            console.log('===== Adding Role =====');
+            const answers = await promptRole();
+            await Role.addNew(answers)
+            console.log(`New role "${answers.title}" has been added to the database`);
+            return choiceLoop();
         }
         if (choice === 'addEmployee') {
-            console.log('Adding Employee');
-            return addEmployee().then(answers => {
-                return new Employee(answers.firstName, answers.lastName, answers.role, answers.manager)
-            });
+            console.log('===== Adding Employee =====');
+            const answers = await promptEmployee();
+            await Employee.addNew(answers)
+            console.log(`New employee "${answers.firstName} ${answers.lastName}" has been added to the database`);
+            return choiceLoop();
         }
         else {
             console.log('Updating an Employee');
