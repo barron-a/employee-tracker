@@ -71,10 +71,9 @@ const promptRole = () => {
             }
         },
         {
-            type: 'list',
+            type: 'input',
             name: 'departmentId',
-            message: 'Which department does this role belong to?',
-            choices: departments
+            message: 'Which department does this role belong to?'
         }
     ]);
 };
@@ -136,6 +135,7 @@ const promptEmployee = () => {
 const choiceLoop = () => {
     return newAction().then(async ({ choice }) => {
         if (choice === 'exit') {
+            console.log('Goodbye!');
             return;
         }
         if (choice === 'viewDepts') {
