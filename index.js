@@ -1,5 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const colors = require('colors');
+const logo = require('asciiart-logo');
 const db = require('./db/connection');
 require('console.table');
 
@@ -156,42 +158,55 @@ const promptUpdateEmployeeRole = () => {
 };
 // loop to prompt user for which CRUD method they would like to access
 const choiceLoop = () => {
+    console.log(
+        logo({
+            name: 'Employee Tracker'
+        })
+        .render()
+    );
     return newAction().then(async ({ choice }) => {
         if (choice === 'updateEmployeeRole') {
-            console.log('Updating Employee Role');
+            console.log('\n');
+            console.log('========== Updating Employee Role =========='.bold);
             const answers = await promptUpdateEmployeeRole();
             await Employee.updateEmployee(answers)
             console.log(`Updated!`);
             return choiceLoop();
         }
         if (choice === 'viewDepts') {
-            console.log('Departments:');
+            console.log('\n');
+            console.log('Departments:'.bold);
             return Department.getAll().then(console.table).then(choiceLoop);
         }
         if (choice === 'viewRoles') {
-            console.log('Roles:');
+            console.log('\n');
+            console.log('Roles:'.bold);
             return Role.getAll().then(console.table).then(choiceLoop);
         }
         if (choice === 'viewEmployees') {
-            console.log('Employees:');
+            console.log('\n');
+            console.log('Employees:'.bold);
             return Employee.getAll().then(console.table).then(choiceLoop);
         }
         if (choice === 'addDept') {
-            console.log('===== Adding Department =====');
+            console.log('\n');
+            console.log('========== Adding Department =========='.bold);
             const answers = await promptDepartment();
             await Department.addNew(answers)
             console.log(`New department "${answers.name}" has been added to the database`)
             return choiceLoop();
         }
         if (choice === 'addRole') {
-            console.log('===== Adding Role =====');
+            console.log('\n');
+            console.log('========== Adding Role =========='.bold);
             const answers = await promptRole();
             await Role.addNew(answers)
             console.log(`New role "${answers.title}" has been added to the database`);
             return choiceLoop();
         }
         if (choice === 'addEmployee') {
-            console.log('===== Adding Employee =====');
+            console.log('\n');
+            console.log('========== Adding Employee =========='.bold);
             const answers = await promptEmployee();
             await Employee.addNew(answers)
             console.log(`New employee "${answers.firstName} ${answers.lastName}" has been added to the database`);
