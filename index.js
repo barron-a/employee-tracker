@@ -158,12 +158,6 @@ const promptUpdateEmployeeRole = () => {
 };
 // loop to prompt user for which CRUD method they would like to access
 const choiceLoop = () => {
-    console.log(
-        logo({
-            name: 'Employee Tracker'
-        })
-        .render()
-    );
     return newAction().then(async ({ choice }) => {
         if (choice === 'updateEmployeeRole') {
             console.log('\n');
@@ -171,6 +165,7 @@ const choiceLoop = () => {
             const answers = await promptUpdateEmployeeRole();
             await Employee.updateEmployee(answers)
             console.log(`Updated!`);
+            console.log('\n');
             return choiceLoop();
         }
         if (choice === 'viewDepts') {
@@ -193,7 +188,8 @@ const choiceLoop = () => {
             console.log('========== Adding Department =========='.bold);
             const answers = await promptDepartment();
             await Department.addNew(answers)
-            console.log(`New department "${answers.name}" has been added to the database`)
+            console.log(`New department "${answers.name}" has been added to the database`);
+            console.log('\n');
             return choiceLoop();
         }
         if (choice === 'addRole') {
@@ -202,6 +198,7 @@ const choiceLoop = () => {
             const answers = await promptRole();
             await Role.addNew(answers)
             console.log(`New role "${answers.title}" has been added to the database`);
+            console.log('\n');
             return choiceLoop();
         }
         if (choice === 'addEmployee') {
@@ -210,6 +207,7 @@ const choiceLoop = () => {
             const answers = await promptEmployee();
             await Employee.addNew(answers)
             console.log(`New employee "${answers.firstName} ${answers.lastName}" has been added to the database`);
+            console.log('\n');
             return choiceLoop();
         }
         else {
@@ -217,5 +215,12 @@ const choiceLoop = () => {
         }
     })
 }
+
+console.log(
+    logo({
+        name: 'Employee Tracker'
+    })
+    .render()
+);
 
 choiceLoop().then(end);
