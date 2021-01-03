@@ -3,7 +3,7 @@ const mysql = require('mysql2');
 const db = require('./db/connection');
 require('console.table');
 
-const connection = require('./db/connection');
+const {end} = require('./db/connection');
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employee');
@@ -71,9 +71,13 @@ const promptRole = () => {
             }
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'departmentId',
-            message: 'Which department does this role belong to?'
+            message: 'Which department does this role belong to?',
+            choices: async () => {
+                const departments = await Department.getAll();
+                return departments.map(({ id, name }) => ({ name:name, value:id }))
+            }
         }
     ]);
 };
@@ -108,35 +112,57 @@ const promptEmployee = () => {
             }
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'role',
             message: "What is the employee's role?",
-            validate: empRole => {
-                if (empRole) {
-                    return true;
-                } else {
-                    console.log("Please enter the employee's role");
-                    return false;
-                }
+            choices: async () => {
+                const roles = await Role.getAll();
+                return roles.map(({ id, title }) => ({ name: title, value: id }))
             }
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'manager',
             message: "Who is the employee's manager?",
-            // choices: [
-            //     managers array
-            // ]
+            choices: async () => {
+                const managers = await Employee.getAll();
+                return managers.map(({ id, first_name, last_name }) => ({ name: first_name + " " + last_name, value: id }))
+            }
         }
     ]);
 };
 
+const promptUpdateEmployeeRole = () => {
+    return inquirer.prompt([
+        {
+            type: 'list',
+            name: 'id',
+            message: "Which employee would you like to update?",
+            choices: async () => {
+                const employees = await Employee.getAll();
+                return employees.map(({ id, first_name, last_name }) => ({ name: first_name + " " + last_name, value: id }))
+            }
+        },
+        {
+            type: 'list',
+            name: 'role',
+            message: "What should the employee's new role be?",
+            choices: async () => {
+                const roles = await Role.getAll();
+                return roles.map(({ id, title }) => ({ name: title, value: id }))
+            }
+        }
+    ]);
+};
 // loop to prompt user for which CRUD method they would like to access
 const choiceLoop = () => {
     return newAction().then(async ({ choice }) => {
-        if (choice === 'exit') {
-            console.log('Goodbye!');
-            return;
+        if (choice === 'updateEmployeeRole') {
+            console.log('Updating Employee Role');
+            const answers = await promptUpdateEmployeeRole();
+            await Employee.updateEmployee(answers)
+            console.log(`Updated!`);
+            return choiceLoop();
         }
         if (choice === 'viewDepts') {
             console.log('Departments:');
@@ -172,9 +198,9 @@ const choiceLoop = () => {
             return choiceLoop();
         }
         else {
-            console.log('Updating an Employee');
+            console.log('Goodbye');
         }
     })
 }
 
-choiceLoop();
+choiceLoop().then(end);
