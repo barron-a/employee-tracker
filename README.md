@@ -56,7 +56,7 @@ When updating an employee role, users will be prompted for:</br>
 ---
 
 ## Installation
-Clone the repository from https://github.com/barron-a/team-profile-generator
+Clone the repository from https://github.com/barron-a/employee-tracker
 Navigate to the cloned repository and run 'npm install' to install required packages and dependencies
 
 ---
@@ -65,7 +65,7 @@ Navigate to the cloned repository and run 'npm install' to install required pack
 To use this application, navigate to the cloned folder from your Terminal and run 'npm start' from the command line. You will be prompted with a logo and a series of questions. When you choose "I'm done building and viewing my team for now" from the command line, the application will exit.
 
 ### Video Demo
-Please visit the following link for a [video demo](https://drive.google.com/file/d/1M-zSkZ4B_CIfD2kNrdAsO7lKI4UmFIaR/view)
+Please visit the following link for a [video demo](https://drive.google.com/file/d/11qQAXghlNbNnvlXT4091s4ThV-NEQYB8/view)
 
 ---
 
@@ -78,6 +78,7 @@ Please visit the following link for a [video demo](https://drive.google.com/file
 - SQL
 - MySQL2
 - Console.table
+- Jest
 
 ---
 
