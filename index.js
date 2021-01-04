@@ -26,7 +26,7 @@ const newAction = () => {
                 { name: 'Add a Role', value: 'addRole' },
                 { name: 'Add an Employee', value: 'addEmployee' },
                 { name: 'Update an Employee Role', value: 'updateEmployeeRole' },
-                { name: "I'm done building my team for now", value: 'exit' }
+                { name: "I'm done building and viewing my team for now", value: 'exit' }
             ]
         }
     ]);
